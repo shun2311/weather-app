@@ -15,8 +15,7 @@
 
       <div class="grid md:grid-cols-2 gap-4">
         <v-card
-          class="hero-card"
-          color="surface-variant"
+          color="secondary"
           image="https://cdn.vuetifyjs.com/docs/images/one/create/feature.png"
           rounded="xl"
           variant="tonal"
@@ -47,7 +46,7 @@
           :key="link.href"
           append-icon="mdi-arrow-top-right"
           class="feature-card"
-          color="surface-variant"
+          color="primary"
           :href="link.href"
           rel="noopener noreferrer"
           rounded="xl"
