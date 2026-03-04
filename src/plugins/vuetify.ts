@@ -1,15 +1,15 @@
 /**
  * plugins/vuetify.ts
  *
- * Framework documentation: https://vuetifyjs.com
+ * Framework documentation: https://vuetifyjs.com`
  */
 
+// Composables
 import { createVuetify } from 'vuetify'
+// Styles
 import '@mdi/font/css/materialdesignicons.css'
-import '../styles/fonts.scss'
-import '../styles/settings.scss'
-import 'vuetify/styles'
 
+import 'vuetify/styles'
 const myCustomTheme = {
   dark: false,
   colors: {
@@ -31,14 +31,13 @@ const myCustomTheme = {
     'blue-700': 'hsl(248, 70%, 36%)',
   },
 }
-
+// https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   theme: {
-    defaultTheme: 'defaukt',
-    utilities: false,
-    // themes: {
-    //   myCustomTheme,
-    // },
+    defaultTheme: 'system',
+    themes: {
+      myCustomTheme,
+    },
   },
   display: {
     mobileBreakpoint: 'md',

@@ -6,7 +6,7 @@ import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.NODE_ENV === "production" ? "/Multi-Form-Vue/" : "/",
+  base: process.env.NODE_ENV === "production" ? "/weather-app/" : "/",
   plugins: [
     Vue({
       template: { transformAssetUrls },
@@ -21,10 +21,6 @@ export default defineConfig({
     Fonts({
       fontsource: {
         families: [
-          {
-            name: 'Roboto Mono',
-            weights: [400, 700],
-          },
           {
             name: 'Roboto',
             weights: [100, 300, 400, 500, 700, 900],
