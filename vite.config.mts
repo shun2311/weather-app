@@ -1,5 +1,4 @@
 import { fileURLToPath, URL } from 'node:url'
-import tailwindcss from '@tailwindcss/vite'
 import Vue from '@vitejs/plugin-vue'
 import Fonts from 'unplugin-fonts/vite'
 import { defineConfig } from 'vite'
@@ -9,7 +8,6 @@ import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineConfig({
   base: process.env.NODE_ENV === "production" ? "/Multi-Form-Vue/" : "/",
   plugins: [
-    tailwindcss(),
     Vue({
       template: { transformAssetUrls },
     }),
