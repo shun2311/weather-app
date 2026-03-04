@@ -13,6 +13,7 @@ import 'vuetify/styles'
 const myCustomTheme = {
   dark: false,
   colors: {
+    background: 'hsl(243, 96%, 9%)',
     // Your previous Blue & Orange colors...
     
     // Neutrals
