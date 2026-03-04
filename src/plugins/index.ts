@@ -1,5 +1,6 @@
 import router from '../router';
 import {createPinia} from 'pinia';
+import '@/styles/fonts.scss'
 /**
  * plugins/index.ts
  *
