@@ -10,7 +10,16 @@
       ></v-img>
       
       <v-spacer></v-spacer>
-      <v-btn>units</v-btn>
+      <unit-button 
+        :title="unitTitle"
+        :selected-temperature="temperature"
+        :selected-wind-speed="windSpeed"
+        :selected-precipitation="precipatation"
+        @change-unit="changeUnit"
+        @change-temperature="temperature = $event"
+        @change-speed="windSpeed = $event"
+        @change-precipitation="precipatation = $event"
+      />
     </v-app-bar>
     <v-main class="px-10 mt-16">
       <v-container class="text-center">
@@ -36,7 +45,6 @@
             />
             <div class="mt-5">
             <weather-detail 
-            
               :weather-details="weatherDetails"
             />
             </div>
@@ -61,13 +69,14 @@
 
 <script setup>
 import logo from '@/assets/images/logo.svg'
+import UnitButton from './components/UnitButton.vue';
 import SearchBar from '@/components/SearchBar.vue'
 import WeatherCard from './components/WeatherCard.vue';
 import WeatherDetail from './components/WeatherDetails.vue';
 import DailyForecast from './components/DailyForecast.vue';
 import HourlyForecast from './components/HourlyForecast.vue';
 import { fetchWeatherApi } from "openmeteo";
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 
 const loading = ref(true);
 const error = ref(null);
@@ -134,9 +143,11 @@ const fetchForecastData = async () => {
         daily: ["weather_code", "temperature_2m_min", "temperature_2m_max"],
         hourly: ["temperature_2m", "weather_code"],
         current: ["temperature_2m", "relative_humidity_2m", "precipitation", "wind_speed_10m", "apparent_temperature", "weather_code"],
-
+        ...(windSpeed.value === "mph" && { wind_speed_unit: windSpeed.value }),
+        ...(temperature.value === "fahrenheit" && { temperature_unit: temperature.value }),
+        ...(precipatation.value === "inch" && { precipitation_unit: precipatation.value }),
       };
-
+      
       // Assuming fetchWeatherApi is imported or globally available
       const responses = await fetchWeatherApi(url.value, params);
       // Store the result in our reactive ref
@@ -199,8 +210,8 @@ const fetchForecastData = async () => {
 
       weatherDetails.value[0].data = currentData.value.apparent_temperature + "°"
       weatherDetails.value[1].data = currentData.value.humidity + "%"
-      weatherDetails.value[2].data = currentData.value.wind_speed + " km/h"
-      weatherDetails.value[3].data = currentData.value.precipitation + " mm"
+      weatherDetails.value[2].data = currentData.value.wind_speed + " " + windSpeed.value
+      weatherDetails.value[3].data = currentData.value.precipitation + " " + precipatation.value
     } catch (err) {
       error.value = "Failed to get location.";
       console.error(err);
@@ -219,4 +230,54 @@ onMounted(async () => {
   loading.value = false;
 });
 
+
+// Unit related logics
+const unit = ref("metric")
+const temperature = ref("celcius")
+const windSpeed = ref("km/h")
+const precipatation = ref("mm")
+const unitTitle = computed(() => {
+  return unit.value === "metric" ? "Switch to Imperial" : "Switch to Metric"
+})
+
+const changeUnit = async () => {
+  if(unit.value === "metric") {
+    unit.value = "imperial"
+    temperature.value = "fahrenheit"
+    windSpeed.value = "mph"
+    precipatation.value = "inch"
+  } else if (unit.value === "imperial") {
+    unit.value = "metric"
+    temperature.value = "celcius"
+    windSpeed.value = "km/h"
+    precipatation.value = "mm"
+  }
+  loading.value = true;
+  await fetchForecastData(); 
+  loading.value = false;
+}
+
+watch(temperature, async (newTemp, oldTemp) => {
+  if(newTemp !== oldTemp) {
+    loading.value = true;
+    await fetchForecastData(); 
+    loading.value = false;
+  }
+});
+
+watch(windSpeed, async (newSpeed, oldSpeed) => {
+  if(newSpeed !== oldSpeed) {
+    loading.value = true;
+    await fetchForecastData(); 
+    loading.value = false;
+  }
+});
+
+watch(precipatation, async (newPrecip, oldPrecip) => {
+  if(newPrecip !== oldPrecip) {
+    loading.value = true;
+    await fetchForecastData(); 
+    loading.value = false;
+  }
+});
 </script>

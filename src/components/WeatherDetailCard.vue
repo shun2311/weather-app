@@ -1,6 +1,6 @@
 <template>
     <v-card class="py-3" color="neutral-700" rounded="lg">
-        <v-card-title class="text-start text-label-medium mb-2">{{ title }}</v-card-title>
+        <v-card-title class="text-start text-label-medium mb-2 text-neutral-300">{{ title }}</v-card-title>
         <v-card-subtitle class="text-start text-title-large">{{ data }}</v-card-subtitle>
     </v-card>
 </template>

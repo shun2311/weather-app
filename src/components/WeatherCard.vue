@@ -22,7 +22,7 @@
       v-else 
       class="rounded-xl d-flex flex-column align-center justify-center"      
       color="neutral-600"
-      height="280"
+      height="300"
       width="100%"
     >
       <div class="d-flex justify-center" style="gap: 4px">
