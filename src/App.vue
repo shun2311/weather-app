@@ -34,20 +34,23 @@
               :city="city"
               :country="country"
             />
-          </v-col>
-        </v-row>
-        <v-row class="mt-5">
-          <v-col cols="8">
+            <div class="mt-5">
             <weather-detail 
+            
               :weather-details="weatherDetails"
             />
+            </div>
+            <div class="mt-8">
+              <daily-forecast 
+                :loading="loading"
+                :daily-data="dailyData"
+              />
+            </div>
           </v-col>
-        </v-row>
-         <v-row class="mt-8">
-          <v-col cols="8">
-            <daily-forecast 
+          <v-col cols="4">
+            <hourly-forecast
               :loading="loading"
-              :daily-data="dailyData"
+              :hourly-data="dailyForecastData"
             />
           </v-col>
         </v-row>
@@ -62,8 +65,9 @@ import SearchBar from '@/components/SearchBar.vue'
 import WeatherCard from './components/WeatherCard.vue';
 import WeatherDetail from './components/WeatherDetails.vue';
 import DailyForecast from './components/DailyForecast.vue';
+import HourlyForecast from './components/HourlyForecast.vue';
 import { fetchWeatherApi } from "openmeteo";
-import { ref, onMounted} from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 const loading = ref(true);
 const error = ref(null);
@@ -83,6 +87,8 @@ const weatherDetails = ref([
   {title: "Wind", data: "--"}, 
   {title: "Precipitation", data: "--"}
 ])
+const days = ref(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
+const chosenDay = ref(days.value[new Date().getDay()])
 
 const getLocation = () => {
   return new Promise((resolve, reject) => {
@@ -112,7 +118,6 @@ const getAddress = async () => {
       `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude.value}&lon=${longitude.value}`
     )
     const data = await response.json()
-    console.log(data)
     city.value = data.address.city || data.address.town || data.address.village
     country.value = data.address.country
     
@@ -164,7 +169,22 @@ const fetchForecastData = async () => {
         temperature: hourly.variables(0).valuesArray().map(Math.ceil),
         weather_code: hourly.variables(1).valuesArray(),
       };
-      
+      hourlyData.value = hourlyData.value.time.reduce((acc, time, index) => {
+        const dayName = days.value[time.getDay()];
+        
+        // Initialize the array for the day if it doesn't exist
+        if (!acc[dayName]) {
+          acc[dayName] = { time: [], temperature: [], weather_code: [] };
+        }
+        
+        // Push the data point into the correct day
+        acc[dayName].time.push(time);
+        acc[dayName].temperature.push(hourlyData.value.temperature[index]);
+        acc[dayName].weather_code.push(hourlyData.value.weather_code[index]);
+        
+        return acc;
+      }, {});
+
       // Current Weather Data
       const current = response.current()
       currentData.value = {
@@ -181,18 +201,15 @@ const fetchForecastData = async () => {
       weatherDetails.value[1].data = currentData.value.humidity + "%"
       weatherDetails.value[2].data = currentData.value.wind_speed + " km/h"
       weatherDetails.value[3].data = currentData.value.precipitation + " mm"
-      
-      for (let i=0; i< dailyData.value.time.length; i++) {
-        console.log(dailyData.value.time[i])
-        console.log(dailyData.value.weather_code[i])
-        console.log(dailyData.value.temperature_min[i])
-        console.log(dailyData.value.temperature_max[i])
-      }
     } catch (err) {
       error.value = "Failed to get location.";
       console.error(err);
     }
 };
+
+const dailyForecastData = computed(() => {
+  return hourlyData.value === null ? null : hourlyData.value[chosenDay.value];
+});
 
 onMounted(async () => {
   loading.value = true;

@@ -1,5 +1,5 @@
 <template>
-    <v-card color="neutral-600" rounded="lg" flat height="150">
+    <v-card color="neutral-700" rounded="lg" flat height="150">
         <v-card-text v-if="!loading">{{ day }}</v-card-text>
         <div v-if="!loading" class="d-flex justify-center mb-4">
           <v-img :src="useWeatherIcon(weatherCode)" max-width="40" max-height="40" class="mx-auto" />

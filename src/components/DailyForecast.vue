@@ -3,13 +3,13 @@
     <div class="d-flex ga-5">
       <daily-forecast-card
         class="flex-grow-1"
-        v-for="(item, index) in 7"
+        v-for="index in 7"
         :key="index"
         :loading="loading"
-        :minimumTemp="dailyData?.temperature_min?.[index]"
-        :maximumTemp="dailyData?.temperature_max?.[index]"
-        :weather-code="dailyData?.weather_code?.[index]"
-        :day="dailyData?.time?.[index]"
+        :minimumTemp="dailyData?.temperature_min?.[index-1]"
+        :maximumTemp="dailyData?.temperature_max?.[index-1]"
+        :weather-code="dailyData?.weather_code?.[index-1]"
+        :day="dailyData?.time?.[index-1]"
       />
     </div>
 </template>
