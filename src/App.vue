@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar class="py-6 px-10" color="transparent" density="compact" flat>
+    <v-app-bar :class="mobile ? 'pa-4' : 'py-6 px-10'" color="transparent" density="compact" flat>
       <v-img
         :src="logo"
         height="40"
@@ -21,7 +21,7 @@
         @change-precipitation="precipatation = $event"
       />
     </v-app-bar>
-    <v-main class="px-10 mt-16">
+    <v-main class="px-4 mt-10">
       <v-container class="text-center">
         <v-row justify="center">
           <v-col cols="12">
@@ -31,7 +31,7 @@
           </v-col>
         </v-row>
         <v-row justify="center">
-          <v-col cols="11" md="8" lg="6">
+          <v-col :cols="mobile ? '12' : '11'">
            <search-bar 
             :loading="loading"
             @change-location="changeLocation"
@@ -39,7 +39,7 @@
           </v-col>
         </v-row>
         <v-row class="mt-10">
-          <v-col cols="8">
+          <v-col :cols="mobile ? '12': '8'">
             <weather-card 
               :loading="loading" 
               :current-data="currentData"
@@ -58,7 +58,18 @@
               />
             </div>
           </v-col>
-          <v-col cols="4">
+          <v-col v-if="!mobile" :cols="4">
+            <hourly-forecast
+              :loading="loading"
+              :hourly-data="dailyForecastData"
+              :chosen-day="chosenDay"
+              :days="days"
+              @change-day="(n) => chosenDay = n"
+            />
+          </v-col>
+        </v-row>
+        <v-row v-if="mobile" class="mt-5">
+          <v-col cols="12">
             <hourly-forecast
               :loading="loading"
               :hourly-data="dailyForecastData"
@@ -83,10 +94,12 @@ import DailyForecast from './components/DailyForecast.vue';
 import HourlyForecast from './components/HourlyForecast.vue';
 import { fetchWeatherApi } from "openmeteo";
 import { ref, onMounted, computed, watch } from 'vue';
+import { useDisplay } from 'vuetify';
 
 const loading = ref(true);
 const error = ref(null);
 const url = ref("https://api.open-meteo.com/v1/forecast");
+const { mobile } = useDisplay()
 
 const city = ref('')
 const country = ref('')

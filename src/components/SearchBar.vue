@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex mx-5 align-stretch">
+    <div :class="{'d-flex align-stretch mx-5' : !mobile}">
        <v-autocomplete
           v-model="selectedCity"
           v-model:search="searchQuery"
@@ -49,8 +49,9 @@
         </v-autocomplete>
     <v-btn 
         color="blue-500" 
-        class="ml-4"
+        :class="mobile ? 'mt-4 py-3' : 'ml-4'"
         height="auto" 
+        :width="mobile ? '100%' : ''"
         flat
         rounded="lg"
         @click="quickSelectFirst"
@@ -62,6 +63,8 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import { useDisplay } from 'vuetify';
+
 const props = defineProps({
     loading: {
       type: Boolean,
@@ -70,13 +73,12 @@ const props = defineProps({
 })
 const emit = defineEmits(['changeLocation'])
 
+const { mobile } = useDisplay()
 const selectedCity = ref(null)
 const searchQuery = ref('')
 const cities = ref([])
 const citiesLoading = ref(false)
-const customProps = (item) => ({
-  class: 'text-label-medium'
-})
+
 // 1. Debounce Logic: Prevents API spamming
 let debounceTimer = null
 const debounceFetch = (val) => {

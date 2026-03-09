@@ -1,9 +1,11 @@
 <template>
-    <div class="d-flex ga-5">
+    <div class="d-flex ga-5" :class="{'flex-wrap' : mobile}">
         <weather-detail-card
             v-for="detail in weatherDetails"
-            class="flex-grow-1"
-            style="flex-basis: 0;"
+            :class="'flex-grow-1'"
+            :style="mobile 
+                ? 'flex-basis: calc(50% - 20px);' 
+                : 'flex-basis: 0;'"
             :key="detail.title"
             :title="detail.title"
             :data="detail.data"
@@ -14,6 +16,7 @@
 <script setup>
 import WeatherDetailCard from './WeatherDetailCard.vue';
 import { defineProps} from 'vue';
+import { useDisplay } from 'vuetify';
 
 const props = defineProps({
     weatherDetails: {
@@ -21,4 +24,7 @@ const props = defineProps({
         default: []
     },
 });
+
+const { mobile } = useDisplay()
+
 </script>
