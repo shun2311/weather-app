@@ -32,7 +32,10 @@
         </v-row>
         <v-row justify="center">
           <v-col cols="11" md="8" lg="6">
-           <search-bar />
+           <search-bar 
+            :loading="loading"
+            @change-location="changeLocation"
+           />
           </v-col>
         </v-row>
         <v-row class="mt-10">
@@ -284,4 +287,16 @@ watch(precipatation, async (newPrecip, oldPrecip) => {
     loading.value = false;
   }
 });
+
+//Location API
+const changeLocation = async (location) => {
+  loading.value = true;
+  country.value = location.country
+  city.value = location.name
+  latitude.value = location.latitude
+  longitude.value = location.longitude
+  loading.value = true;
+  await fetchForecastData(); 
+  loading.value = false;
+}
 </script>
