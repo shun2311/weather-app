@@ -59,6 +59,9 @@
             <hourly-forecast
               :loading="loading"
               :hourly-data="dailyForecastData"
+              :chosen-day="chosenDay"
+              :days="days"
+              @change-day="(n) => chosenDay = n"
             />
           </v-col>
         </v-row>
@@ -87,6 +90,7 @@ const country = ref('')
 const latitude = ref(null)
 const longitude = ref(null)
 // fetch weather api
+const allHourlyData = ref(null);
 const hourlyData = ref(null);
 const dailyData = ref(null)
 const currentData = ref(null)
