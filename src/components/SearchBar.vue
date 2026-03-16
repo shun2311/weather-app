@@ -1,27 +1,27 @@
 <template>
     <div :class="{'d-flex align-stretch mx-5' : !mobile}">
-       <v-autocomplete
-          v-model="selectedCity"
-          v-model:search="searchQuery"
-          :items="cities"
-          item-title="formattedName"
-          item-value="id"
-          label="Search for a place..."
-          prepend-inner-icon="mdi-magnify"
-          return-object
-          hide-details="auto"
-          no-filter
-          clearable
-          auto-select-first
-          bg-color="neutral-600" 
-          density="compact"
-          variant="solo-filled"
-          menu-icon=""
-          :list-props="{ 
-                bgColor: 'neutral-700',
-                class: 'pa-0' 
-            }"
-        >
+      <v-combobox
+        v-model="selectedCity"
+        v-model:search="searchQuery"
+        :items="cities"
+        item-title="formattedName"
+        item-value="id"
+        label="Search for a place..."
+        prepend-inner-icon="mdi-magnify"
+        return-object
+        hide-details="auto"
+        no-filter
+        clearable
+        auto-select-first
+        bg-color="neutral-600" 
+        density="compact"
+        variant="solo-filled"
+        menu-icon=""
+        :list-props="{ 
+          bgColor: 'neutral-700',
+          class: 'pa-0' 
+        }"
+      >
         <template v-slot:no-data>
             <v-list-item v-if="citiesLoading" class="text-label-medium">
                 <template v-slot:prepend>
@@ -46,7 +46,7 @@
             >
             </v-list-item>
           </template>
-        </v-autocomplete>
+      </v-combobox>
     <v-btn 
         color="blue-500" 
         :class="mobile ? 'mt-4 py-3' : 'ml-4'"
@@ -127,16 +127,21 @@ async function fetchCities(query) {
 
 // 3. Button Logic: "Quick Select"
 function quickSelectFirst() {
-  if (cities.value === null || cities.value.length === 0) {
+  // If we have search text but haven't formally "selected" an object yet
+  if (typeof selectedCity.value !== 'object'&& cities.value.length > 0) {
+    selectedCity.value = cities.value[0]
+  } else if (!selectedCity.value && searchQuery.value) {
+    // If user clicks search but results haven't loaded, try one last fetch
     fetchCities(searchQuery.value)
-
   }
-  selectedCity.value = cities.value === null || cities.value.length === 0 ? null : cities.value[0]
 }
 
 watch(selectedCity, (newVal, oldVal) => {
-    if(newVal !== oldVal && newVal !== null) {
-        emit('changeLocation', selectedCity.value)
-    } 
+    // 1. Check if newVal exists
+  // 2. Ensure it is an Object (not the string the user is typing)
+  // 3. Ensure it has a unique property from your API (like 'id')
+  if (newVal && typeof newVal === 'object' && newVal.id) {
+    emit('changeLocation', newVal)
+  }
 })
 </script>
