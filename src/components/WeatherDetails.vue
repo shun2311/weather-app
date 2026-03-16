@@ -1,9 +1,9 @@
 <template>
-    <div class="d-flex ga-5" :class="{'flex-wrap' : mobile}">
+    <div class="d-flex ga-5" :class="{'flex-wrap' : mdAndDown}">
         <weather-detail-card
             v-for="detail in weatherDetails"
             :class="'flex-grow-1'"
-            :style="mobile 
+            :style="mdAndDown 
                 ? 'flex-basis: calc(50% - 20px);' 
                 : 'flex-basis: 0;'"
             :key="detail.title"
@@ -25,6 +25,6 @@ const props = defineProps({
     },
 });
 
-const { mobile } = useDisplay()
+const { mdAndDown } = useDisplay()
 
 </script>

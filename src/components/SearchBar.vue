@@ -1,5 +1,5 @@
 <template>
-    <div :class="{'d-flex align-stretch mx-5' : !mobile}">
+    <div :class="{'d-flex align-stretch mx-5' : !mdAndDown}">
       <v-combobox
         v-model="selectedCity"
         v-model:search="searchQuery"
@@ -49,9 +49,9 @@
       </v-combobox>
     <v-btn 
         color="blue-500" 
-        :class="mobile ? 'mt-4 py-3' : 'ml-4'"
+        :class="mdAndDown ? 'mt-4 py-3' : 'ml-4'"
         height="auto" 
-        :width="mobile ? '100%' : ''"
+        :width="mdAndDown ? '100%' : ''"
         flat
         rounded="lg"
         @click="quickSelectFirst"
@@ -73,7 +73,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['changeLocation'])
 
-const { mobile } = useDisplay()
+const { mdAndDown } = useDisplay()
 const selectedCity = ref(null)
 const searchQuery = ref('')
 const cities = ref([])

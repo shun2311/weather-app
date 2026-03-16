@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar :class="mobile ? 'pa-4' : 'py-6 px-10'" color="transparent" density="compact" flat>
+    <v-app-bar :class="mdAndDown ? 'pa-4' : 'py-6 px-10'" color="transparent" density="compact" flat>
       <v-img
         :src="logo"
         height="40"
@@ -31,7 +31,7 @@
           </v-col>
         </v-row>
         <v-row justify="center">
-          <v-col :cols="mobile ? '12' : '11'">
+          <v-col :cols="mdAndDown ? '12' : '11'">
            <search-bar 
             :loading="loading"
             @change-location="changeLocation"
@@ -39,7 +39,7 @@
           </v-col>
         </v-row>
         <v-row class="mt-10">
-          <v-col :cols="mobile ? '12': '8'">
+          <v-col :cols="mdAndDown ? '12': '8'">
             <weather-card 
               :loading="loading" 
               :current-data="currentData"
@@ -58,8 +58,9 @@
               />
             </div>
           </v-col>
-          <v-col v-if="!mobile" :cols="4">
+          <v-col v-if="!mdAndDown" :cols="4" class="d-flex">
             <hourly-forecast
+              class="flex-grow-1"
               :loading="loading"
               :hourly-data="dailyForecastData"
               :chosen-day="chosenDay"
@@ -68,7 +69,7 @@
             />
           </v-col>
         </v-row>
-        <v-row v-if="mobile" class="mt-5">
+        <v-row v-if="mdAndDown" class="mt-5">
           <v-col cols="12">
             <hourly-forecast
               :loading="loading"
@@ -99,7 +100,7 @@ import { useDisplay } from 'vuetify';
 const loading = ref(true);
 const error = ref(null);
 const url = ref("https://api.open-meteo.com/v1/forecast");
-const { mobile } = useDisplay()
+const { mdAndDown } = useDisplay()
 
 const city = ref('')
 const country = ref('')

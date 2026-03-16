@@ -1,8 +1,8 @@
 <template>
     <div class="text-start text-label-large mb-4">Daily forecast</div>
-    <div class="d-flex ga-5" :class="{'flex-wrap' : mobile}">
+    <div class="d-flex ga-5" :class="{'flex-wrap' : mdAndDown}">
       <daily-forecast-card
-        :class="{'flex-grow-1' : !mobile}"
+        :class="{'flex-grow-1' : !mdAndDown}"
         v-for="index in 7"
         :key="index"
         :loading="loading"
@@ -10,7 +10,7 @@
         :maximumTemp="dailyData?.temperature_max?.[index-1]"
         :weather-code="dailyData?.weather_code?.[index-1]"
         :day="dailyData?.time?.[index-1]"
-        :style="mobile 
+        :style="mdAndDown 
                 ? 'flex-basis: calc(33% - 13px);' 
                 : ''"
       />
@@ -33,6 +33,6 @@ const props = defineProps({
     }
 })
 
-const { mobile } = useDisplay()
+const { mdAndDown } = useDisplay()
 
 </script>

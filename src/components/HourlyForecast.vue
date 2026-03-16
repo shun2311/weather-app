@@ -1,5 +1,5 @@
 <template>
-  <v-card flat height="665" rounded="lg" color="neutral-700">
+  <v-card flat rounded="lg" color="neutral-700">
     <div v-if="!loading">
       <div class="d-flex flex-grow-1">
         <v-card-text class="text-start text-title-medium">
@@ -23,7 +23,7 @@
 
         </v-menu>
       </div>
-      <v-sheet class="custom-scroll" height="590" color="transparent">
+      <v-sheet class="custom-scroll" :height="scrollerHeight" color="transparent">
         <hourly-forecast-card v-for="index in 24" :key="index" class="mb-4" :date="hourlyData?.time?.[index - 1]"
           :temperature="hourlyData?.temperature?.[index - 1]" :weather-code="hourlyData?.weather_code?.[index - 1]" />
       </v-sheet>
@@ -34,8 +34,8 @@
 <script setup>
 import HourlyForecastCard from './HourlyForecastCard.vue';
 import iconDropdown from '@/assets/images/icon-dropdown.svg';
-
-import { defineProps } from 'vue';
+import { useDisplay } from 'vuetify'
+import { defineProps, computed } from 'vue';
 
 const props = defineProps({
   hourlyData: {
@@ -55,6 +55,21 @@ const props = defineProps({
     default: true
   },
 });
+
+const { xxl, lg, mdAndDown } = useDisplay()
+
+const scrollerHeight = computed(() => {
+  if (mdAndDown.value) {
+    return 350
+  }
+  if (lg.value) {
+    return 460
+  }
+  if (xxl.value) {
+    return 720
+  }
+  return 590
+})
 </script>
 
 <style>

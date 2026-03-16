@@ -1,8 +1,8 @@
 <template>
   <v-img v-if="!loading" :src="weatherBackground" class="rounded-xl" cover>
     <div class="d-flex fill-height mx-6"
-      :class="mobile ? 'flex-column align-center justify-center py-10' : 'align-center'">
-      <div :class="mobile ? 'text-center mb-6' : 'text-left'">
+      :class="mdAndDown ? 'flex-column align-center justify-center py-10' : 'align-center'">
+      <div :class="mdAndDown ? 'text-center mb-6' : 'text-left'">
         <div class="text-title-large font-weight-medium mb-2">
           {{ city }}, {{ country }}
         </div>
@@ -11,9 +11,9 @@
         </div>
       </div>
 
-      <v-spacer v-if="!mobile"></v-spacer>
+      <v-spacer v-if="!mdAndDown"></v-spacer>
 
-      <div class="d-flex align-center" :class="mobile ? 'justify-space-between w-100 px-10' : ''">
+      <div class="d-flex align-center" :class="mdAndDown ? 'justify-space-between w-100 px-10' : ''">
         <v-img :src="useWeatherIcon(currentData.weatherCode)" max-width="80" width="80" height="80" contain></v-img>
         <div class="ml-8 text-display-large">{{ currentData.temperature }}°</div>
       </div>
@@ -65,7 +65,7 @@ const options = {
   year: 'numeric'
 };
 const today = new Date();
-const { mobile } = useDisplay()
+const { mdAndDown } = useDisplay()
 
 onMounted(() => date.value = today.toLocaleDateString('en-GB', options))
 </script>
